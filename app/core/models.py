@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
-        """ create and save new user """
+        # create and save new user
         if not email:
             raise ValueError('An email must be used')
         user = self.model(email=self.normalize_email(email), **extra_fields)
@@ -12,7 +12,7 @@ class UserManager(BaseUserManager):
         return user
     
     def create_superuser(self, email, password):
-        """ create and save new superuser """
+        # create and save new superuser
         user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
@@ -20,7 +20,7 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """ customer user model supports email """
+    # customer user model supports email
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
