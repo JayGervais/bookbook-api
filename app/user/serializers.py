@@ -23,9 +23,11 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
         return user
+        
 
 class AuthTokenSerializer(serializers.Serializer):
     # serializer for user authentication object
+
     email = serializers.CharField()
     password = serializers.CharField(
         style={'input_type': 'password'},

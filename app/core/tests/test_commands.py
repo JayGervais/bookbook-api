@@ -5,6 +5,7 @@ from django.db.utils import OperationalError
 from django.test import TestCase
 
 class CommandsTestCase(TestCase):
+
     def test_wait_for_db_ready(self):
         # test waiting for db when db is available
         with patch('django.db.utils.ConnectionHandler.__getitem__') as gi:
