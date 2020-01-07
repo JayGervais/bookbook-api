@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 
 from core import models
 
+
 class UserAdmin(BaseUserAdmin):
 
     ordering = ['id']
@@ -12,7 +13,7 @@ class UserAdmin(BaseUserAdmin):
         (None, {'fields': ('email', 'password')}),
         (_('Personal Info'), {'fields': ('name',)}),
         (
-            _('Permissions'),   
+            _('Permissions'),
             {'fields': ('is_active', 'is_staff', 'is_superuser')}
         ),
         (_('Important dates'), {'fields': ('last_login',)})
@@ -25,5 +26,7 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Tag)
+admin.site.register(models.Ingredient)

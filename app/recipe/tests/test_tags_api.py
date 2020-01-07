@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.test import TestCase
 
 from rest_framework import status
-from rest_framework.test  import APIClient
+from rest_framework.test import APIClient
 
 from core.models import Tag
 
@@ -16,12 +16,12 @@ class PublicTagsApiTests(TestCase):
     # test publically available tags API
     def setUp(self):
         self.client = APIClient()
-    
+
     def test_login_required(self):
         # test that login required for retrieving tags
         res = self.client.get(TAGS_URL)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
-    
+
 
 class PrivateTagsApiTests(TestCase):
     # test the authorized user tags API
@@ -39,7 +39,7 @@ class PrivateTagsApiTests(TestCase):
         Tag.objects.create(user=self.user, name='Dessert')
 
         res = self.client.get(TAGS_URL)
-        
+
         tags = Tag.objects.all().order_by('-name')
         serializer = TagSerializer(tags, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -70,14 +70,10 @@ class PrivateTagsApiTests(TestCase):
             name=payload['name']
         ).exists()
         self.assertTrue(exists)
-    
+
     def test_create_tag_invalid(self):
         # test creating a new tag with invalid payload
         payload = {'name': ''}
         res = self.client.post(TAGS_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-
-
-
-
