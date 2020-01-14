@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import serializers
 
+
 class UserSerializer(serializers.ModelSerializer):
     # serializer for user object
 
@@ -23,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
         return user
-        
+
 
 class AuthTokenSerializer(serializers.Serializer):
     # serializer for user authentication object
