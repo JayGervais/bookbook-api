@@ -1,5 +1,7 @@
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
+# from rest_framework_jwt.views import ObtainJSONWebToken
+
 from rest_framework.settings import api_settings
 from rest_framework.permissions import AllowAny
 from user.serializers import UserSerializer, AuthTokenSerializer
@@ -17,6 +19,12 @@ class CreateTokenView(ObtainAuthToken):
     # create new auth token for user
     serializer_class = AuthTokenSerializer
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+# class CreateTokenView(ObtainJSONWebToken):
+
+#     # create new auth token for user
+#     serializer_class = AuthTokenSerializer
+#     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):

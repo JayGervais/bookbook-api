@@ -15,12 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
+# from django.conf.urls import url
+from app.views import signup_view, activation_sent_view, activate
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+
+    path('signup/', signup_view, name="signup"),
+    path('sent/', activation_sent_view, name="activation_sent"),
+    path('activate/<slug:uidb64>/<slug:token>/', activate, name='activate'),
+
     path('api/user/', include('user.urls')),
     path('api/recipe/', include('recipe.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
