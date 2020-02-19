@@ -1,1 +1,4 @@
-<h3>Activation link sent! Please check your console or mail.</h3>
+<h3>Account successfully created!</h3>
+{% if user.is_authenticated %}
+<a href="{% url 'login' %}">login</a>
+{% endif %}

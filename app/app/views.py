@@ -1,8 +1,8 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, get_user_model
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_text
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
@@ -22,18 +22,18 @@ def activation_sent_view(request):
     return render(request, 'activation_sent.html')
 
 
-def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
+def activate(self, email, token, request, password=None, **extra_fields):
+    if not email:
+        raise ValueError('An email must be used')
+    user = self.model(email=self.normalize_email(email), **extra_fields)
+    user.set_password(password)
+    user.save(using=self._db)
     # checking if the user exists, if the token is valid.
     if user is not None and account_activation_token.check_token(user, token):
         # if valid set active true
         user.is_active = True
         # set signup_confirmation true
-        user.profile.signup_confirmation = True
+        # user.profile.signup_confirmation = True
         user.save()
         login(request, user)
         return redirect('home')
@@ -42,16 +42,15 @@ def activate(request, uidb64, token):
 
 
 def signup_view(request):
-    if request.method  == 'POST':
+    if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()
-            user.profile.first_name = form.cleaned_data.get('first_name')
-            user.profile.last_name = form.cleaned_data.get('last_name')
-            user.profile.email = form.cleaned_data.get('email')
+            # user.name = form.cleaned_data.get('name')
+            # user.email = form.cleaned_data.get('email')
             # user can't login until link confirmed
-            user.is_active = False
+            user.is_active = True
             user.save()
             current_site = get_current_site(request)
             subject = 'Please Activate Your Account'
@@ -64,8 +63,9 @@ def signup_view(request):
                 # method will generate a hash value with user related data
                 'token': account_activation_token.make_token(user),
             })
-            user.email_user(subject, message)
+            # user.email_user(subject, message)
             return redirect('activation_sent')
+            # return redirect('login')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
